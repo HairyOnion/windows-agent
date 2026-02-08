@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+pystray
+pillow
+pynput
+requests

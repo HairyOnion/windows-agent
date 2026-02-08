@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "integrate-agent"
+version = "0.1.0"
+description = "Local Windows tray agent controlling a FastAPI server"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi",
+  "uvicorn",
+  "pystray",
+  "pillow",
+  "pynput",
+  "requests",
+]
+
+[tool.setuptools]
+packages = ["server", "tray"]
