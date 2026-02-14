@@ -12,8 +12,19 @@ from .auth import get_token_or_raise, verify_bearer
 from .executor import run_allowed_app
 from .keypress import send_keys, validate_keys
 from .logging_conf import setup_logging
-from .models import CommandRequest, CommandResponse, KeyPressPayload, RunAppPayload
+from .models import (
+    CommandRequest,
+    CommandResponse,
+    KeyPressPayload,
+    RunAppPayload,
+    VoicemeeterApplyPayload,
+    VoicemeeterCommandPayload,
+    VoicemeeterGetPayload,
+    VoicemeeterGroupBusGainPayload,
+    VoicemeeterSetPayload,
+)
 from .config import DEFAULT_HOST, DEFAULT_PORT, VERSION
+from . import voicemeeter
 
 
 app = FastAPI()
@@ -46,6 +57,7 @@ def on_startup() -> None:
 
 @app.on_event("shutdown")
 def on_shutdown() -> None:
+    voicemeeter.shutdown_vm()
     logging.getLogger("agent").info(
         "server_stop",
         extra={"extra": {"event": "shutdown", "timestamp_utc": _now_utc()}},
@@ -89,6 +101,32 @@ def command(
             validate_keys(payload.keys)
             send_keys(payload.keys)
             result = {"sent": payload.keys}
+        elif req.action == "voicemeeter_apply":
+            payload = VoicemeeterApplyPayload(**req.payload)
+            applied = voicemeeter.apply_settings(payload.settings)
+            result = {"applied": applied}
+        elif req.action == "voicemeeter_group_bus_gain":
+            payload = VoicemeeterGroupBusGainPayload(**req.payload)
+            result = voicemeeter.apply_group_bus_gain(payload.gain)
+        elif req.action == "voicemeeter_command":
+            payload = VoicemeeterCommandPayload(**req.payload)
+            voicemeeter.run_command(payload.command)
+            result = {"command": payload.command}
+        elif req.action == "voicemeeter_get":
+            payload = VoicemeeterGetPayload(**req.payload)
+            if payload.params is not None:
+                params = [param.dict() for param in payload.params]
+                values = voicemeeter.get_params(params)
+            else:
+                targets = payload.targets or []
+                fields = payload.fields or []
+                values = voicemeeter.get_targets_fields(targets, fields)
+            result = {"values": values}
+        elif req.action == "voicemeeter_set":
+            payload = VoicemeeterSetPayload(**req.payload)
+            params = [param.dict() for param in payload.params]
+            count = voicemeeter.set_params(params)
+            result = {"applied": count}
         else:
             raise ValueError("Unknown action")
 

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Set
 import os
 
 
@@ -96,3 +96,24 @@ DEFAULT_PORT = 8765
 VERSION = "0.1.0"
 
 APPDATA_LOG_DIR = Path(os.environ.get("APPDATA", r"C:\\")) / "IntegrateAgent" / "logs"
+
+VOICEMEETER_KIND = "potato"
+VOICEMEETER_ALLOWED_STRIPS: Set[int] = set(range(0, 8))
+VOICEMEETER_ALLOWED_BUSES: Set[int] = set(range(0, 5))
+VOICEMEETER_ALLOWED_TARGET_PATTERNS = [
+    r"strip-\d+",
+    r"bus-\d+",
+]
+VOICEMEETER_ALLOWED_FIELD_PATTERNS = [
+    r"gain",
+    r"mute",
+]
+VOICEMEETER_ALLOWED_COMMANDS = {
+    "reset",
+    "restart",
+}
+VOICEMEETER_ALLOWED_PARAM_PATTERNS: List[str] = []
+VOICEMEETER_GAIN_MIN = -60.0
+VOICEMEETER_GAIN_MAX = 12.0
+VOICEMEETER_GROUP_BUS_IDS = [0, 1, 2]
+
