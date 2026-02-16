@@ -25,6 +25,25 @@ pythonw -m tray.tray_app
 
 The tray icon shows running status and provides controls.
 
+## Quick Run (cmd.exe helpers)
+From repo root in `cmd.exe`:
+
+```bat
+scripts\setup_windows.cmd
+```
+
+Edit `.env` and set `AGENT_TOKEN`, then run:
+
+```bat
+scripts\run_tray.cmd
+```
+
+Optional (run API server directly without tray):
+
+```bat
+scripts\run_server.cmd
+```
+
 ## API
 Health:
 
