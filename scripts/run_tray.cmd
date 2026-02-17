@@ -3,7 +3,7 @@ setlocal
 
 cd /d "%~dp0.."
 
-if not exist ".venv\Scripts\pythonw.exe" (
+if not exist ".venv\Scripts\python.exe" (
   echo Missing virtual environment. Run scripts\setup_windows.cmd first.
   exit /b 1
 )
@@ -22,7 +22,12 @@ if "%AGENT_TOKEN%"=="" (
   exit /b 1
 )
 
-start "IntegrateAgent Tray" /min ".venv\Scripts\pythonw.exe" -m tray.tray_app
+set "PYTHON_EXE=.venv\Scripts\python.exe"
+if exist ".venv\Scripts\pythonw.exe" (
+  set "PYTHON_EXE=.venv\Scripts\pythonw.exe"
+)
+
+start "IntegrateAgent Tray" /min "%PYTHON_EXE%" -m tray.tray_app
 
 echo Tray app started. Look for the IntegrateAgent icon in the system tray.
 exit /b 0

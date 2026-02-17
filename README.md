@@ -44,6 +44,10 @@ Optional (run API server directly without tray):
 scripts\run_server.cmd
 ```
 
+Optional tray logging flags in `.env`:
+- `TRAY_SERVER_OUTPUT_LOG_ENABLED` (`false` by default): when `true`, write tray-started server stdout/stderr to `%APPDATA%\IntegrateAgent\logs\server_output.log`.
+- `TRAY_SERVER_OUTPUT_LOG_DAILY_CLEAR` (`true` by default): when logging is enabled, truncate `server_output.log` once per day before appending new output.
+
 ## API
 Health:
 
